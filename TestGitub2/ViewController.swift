@@ -82,22 +82,33 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             
             
-            // Convert Data to models/some object
+
+        
+        
+            var json: WeatherResponse?
+                    do {
+                        
+                        json = try JSONDecoder().decode(WeatherResponse.self, from: data)
+                    }
+                    catch {
+                        print("error: \(error)")
+                    }
+                    
+                    guard let result = json else {
+                        return
+                    }
             
-            do {
-                let model = try JSONDecoder().decode(WeatherResponse.self, from: data)
-                print(model.timezone)
-            }
-            catch {
-                print("error: \(error)")
-            }
+            print(result.timezone)
+        
+        let entries = result.current.weather
+        
+        self.models.append(contentsOf: entries)
             
-            
-            
-            
-            
+        
             // Update user interface
-            
+        DispatchQueue.main.async {
+            self.table.reloadData()
+        }
             
             
             
@@ -114,7 +125,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as! WeatherTableViewCell
+        cell.configure(with: models[indexPath.row])
+        return cell
     }
     
 
