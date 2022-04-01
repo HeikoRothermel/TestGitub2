@@ -14,7 +14,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
 
     @IBOutlet var table: UITableView!
-    var models = [Weather]()
+    var models = [TempDaily]()
     
     let locationManager = CLLocationManager()
     
@@ -100,10 +100,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             print(result.timezone)
         
-        let entries = result.current.weather
+        let entries = result.daily.temp
         
         self.models.append(contentsOf: entries)
-            
         
             // Update user interface
         DispatchQueue.main.async {
@@ -138,22 +137,76 @@ struct WeatherResponse: Codable {
     
 
     let timezone: String
-    let current: Current
+//    let current: Current
+//    let minutely: Minutely
+//    let hourly: Hourly
+    let daily: Daily
     
     
     
 }
 
-struct Current: Codable {
+//struct Current: Codable {
+//
+//    let temp: Float
+//    let weather: [WeatherCurrent]
+//
+//}
+//
+//struct WeatherCurrent: Codable {
+//
+//    let main: String
+//    let description: String
+//
+//}
+
+
+
+
+
+
+//struct Minutely: Codable {
+//
+//    let temp: Float
+//    let weather: [WeatherMinutely]
+//
+//}
+//
+//struct WeatherMinutely: Codable {
+//
+//    let main: String
+//    let description: String
+//
+//}
+//
+//struct Hourly: Codable {
+//
+//    let temp: Float
+//    let weather: [WeatherHourly]
+//
+//}
+//
+//struct WeatherHourly: Codable {
+//
+//    let main: String
+//    let description: String
+//
+//}
+
+struct Daily: Codable {
     
-    let temp: Float
-    let weather: [Weather]
+    let dt: Int
+    let temp: [TempDaily]
     
 }
 
-struct Weather: Codable {
+struct TempDaily: Codable {
     
-    let main: String
-    let description: String
+    let day: Float
+    let min: Float
+    let max: Float
+    let night: Float
+    let eve: Float
+    let morn: Float
     
 }
