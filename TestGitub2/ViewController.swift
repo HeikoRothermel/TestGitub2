@@ -14,7 +14,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
 
     @IBOutlet var table: UITableView!
-    var models = [Current]()
+    var models = [Weather]()
     
     let locationManager = CLLocationManager()
     
@@ -65,12 +65,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guard let currentLocation = currentLocation else {
             return
         }
+        
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
+        print("\(lat) | \(long)")
         
-        let url = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&units=metric&lang=de&appid=7e5da986d80232efd714c8abf2a1db1b"
-        
-        URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: { data, response, error in
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&units=metric&appid=7e5da986d80232efd714c8abf2a1db1b") else {
+            return
+        }
+       let task = URLSession.shared.dataTask(with: url) { data, _, error in
           
             //Validation
             guard let data = data, error == nil else {
@@ -80,19 +83,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
             // Convert Data to models/some object
-            var json: WeatherResponse?
+            
             do {
-                json = try JSONDecoder().decode(WeatherResponse.self, from: data)
+                let model = try JSONDecoder().decode(WeatherResponse.self, from: data)
+                print(model.timezone)
             }
             catch {
                 print("error: \(error)")
             }
             
-            guard let result = json else {
-                return
-            }
             
-            print(result.current.temp)
+            
             
             
             // Update user interface
@@ -101,13 +102,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
             
-        }).resume()
+        }
+        task.resume()
         
         
     }
     
     // Table
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
     }
@@ -121,10 +122,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 struct WeatherResponse: Codable {
     
-//    let lat: Float
-    let lon: Float
+
     let timezone: String
-    
     let current: Current
     
     
@@ -134,16 +133,13 @@ struct WeatherResponse: Codable {
 struct Current: Codable {
     
     let temp: Float
-    
-    let weather: Weather
+    let weather: [Weather]
     
 }
 
 struct Weather: Codable {
     
     let main: String
-    
-    
+    let description: String
     
 }
-
