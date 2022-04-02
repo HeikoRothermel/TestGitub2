@@ -4,7 +4,6 @@
 //
 //  Created by Heiko Rothermel on 3/31/22.
 //
-
 import UIKit
 import CoreLocation
 
@@ -14,7 +13,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
 
     @IBOutlet var table: UITableView!
-    var models = [TempDaily]()
+    var models = [Daily]()
     
     let locationManager = CLLocationManager()
     
@@ -70,7 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let lat = currentLocation.coordinate.latitude
         print("\(lat) | \(long)")
         
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&units=metric&appid=7e5da986d80232efd714c8abf2a1db1b") else {
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&units=metric&lang=de&appid=7e5da986d80232efd714c8abf2a1db1b") else {
             return
         }
        let task = URLSession.shared.dataTask(with: url) { data, _, error in
@@ -89,9 +88,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     do {
                         
                         json = try JSONDecoder().decode(WeatherResponse.self, from: data)
+                        
                     }
                     catch {
                         print("error: \(error)")
+                        
                     }
                     
                     guard let result = json else {
@@ -100,9 +101,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             print(result.timezone)
         
-        let entries = result.daily.temp
+        let entries = result.daily
         
         self.models.append(contentsOf: entries)
+            
+        for itm in json!.daily {
+            print("Value: \(json?.timezone ?? "No timezone") \n \(itm.clouds), \(itm.uvi), \(itm.pop), \(itm.wind_gust)")
+        }
         
             // Update user interface
         DispatchQueue.main.async {
@@ -135,78 +140,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 struct WeatherResponse: Codable {
     
-
+//
     let timezone: String
-//    let current: Current
-//    let minutely: Minutely
-//    let hourly: Hourly
-    let daily: Daily
+    let daily: [Daily]
     
     
     
 }
-
-//struct Current: Codable {
-//
-//    let temp: Float
-//    let weather: [WeatherCurrent]
-//
-//}
-//
-//struct WeatherCurrent: Codable {
-//
-//    let main: String
-//    let description: String
-//
-//}
-
-
-
-
-
-
-//struct Minutely: Codable {
-//
-//    let temp: Float
-//    let weather: [WeatherMinutely]
-//
-//}
-//
-//struct WeatherMinutely: Codable {
-//
-//    let main: String
-//    let description: String
-//
-//}
-//
-//struct Hourly: Codable {
-//
-//    let temp: Float
-//    let weather: [WeatherHourly]
-//
-//}
-//
-//struct WeatherHourly: Codable {
-//
-//    let main: String
-//    let description: String
-//
-//}
 
 struct Daily: Codable {
-    
     let dt: Int
-    let temp: [TempDaily]
+    let clouds: Int
+    let wind_gust: Float
+    let pop: Float
+    let uvi: Float
+    
+    
     
 }
 
-struct TempDaily: Codable {
-    
-    let day: Float
-    let min: Float
-    let max: Float
-    let night: Float
-    let eve: Float
-    let morn: Float
-    
-}
+//struct Weather: Codable {
+//
+//    let main: String
+//    let description: String
+//
+//}

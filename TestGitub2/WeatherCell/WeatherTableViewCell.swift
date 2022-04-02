@@ -33,28 +33,26 @@ class WeatherTableViewCell: UITableViewCell {
         return UINib(nibName: "WeatherTableViewCell", bundle: nil)
     }
     
-    func configure(with model: TempDaily) {
-        self.lowTempLabel.text = "\(Int(model.min))"
-        self.highTempLabel.text = "\(Int(model.max))"
-        
+    func configure(with model: Daily) {
+        self.lowTempLabel.text = "\(model.uvi)"
+        self.highTempLabel.text = "\(model.clouds)"
         self.dayLabel.text = getDayForDate(Date(timeIntervalSince1970: Double(model.dt)))
-        
-        
         self.iconImageView.image = UIImage(named: "sun")
         
+        
     }
+    
     
     func getDayForDate(_ date: Date?) -> String {
-        guard let inputDate = date else {
-            return ""
+            guard let inputDate = date else {
+                return ""
+            }
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM, d"
+            return formatter.string(from: inputDate)
+            
+            
         }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM"
-        return formatter.string(from: inputDate)
-        
-        
-    }
-    
     
 }
