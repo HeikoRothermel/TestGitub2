@@ -24,6 +24,7 @@
 /* Begin PBXFileReference section */
 		E87DA59327F8819B004BB7AA /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		E87DA59427F8819B004BB7AA /* WeatherCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherCollectionViewCell.xib; sourceTree = "<group>"; };
+		E87DA5B727F8E905004BB7AA /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E8C3268127F6056200DDC1FD /* TestGitub2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestGitub2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8C3268427F6056200DDC1FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8C3268627F6056200DDC1FD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 				E8C3268D27F6056A00DDC1FD /* Assets.xcassets */,
 				E8C3268F27F6056A00DDC1FD /* LaunchScreen.storyboard */,
 				E8C3269227F6056A00DDC1FD /* Info.plist */,
+				E87DA5B727F8E905004BB7AA /* MyPlayground.playground */,
 			);
 			path = TestGitub2;
 			sourceTree = "<group>";
