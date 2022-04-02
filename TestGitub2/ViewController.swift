@@ -14,10 +14,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     @IBOutlet var table: UITableView!
     var models = [Daily]()
+    var hourlyModels = [Hourly]()
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation?
-    var current:
+    var current: Current?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,8 +105,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let entries = result.daily
         
         self.models.append(contentsOf: entries)
-        let current = result.daily
-        self.DailyWeather = current
+        
+        let current = result.current
+        self.current = current
+        
+        self.hourlyModels = result.hourly
         
             
         for itm in json!.daily {
@@ -144,21 +148,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         locationLabel.textAlignment = .center
         summaryLabel.textAlignment = .center
         
-        tempLabel.text = "12"
-        tempLabel.font = UIFont(name: "Helvetica-Bold", size: 32)
         locationLabel.text = "Current Location"
-        summaryLabel.text = "Clear"
+        
+        guard let currentWeather = self.current else {
+            return UIView()
+        }
+        tempLabel.text = "\(currentWeather.temp)"
+        tempLabel.font = UIFont(name: "Helvetica-Bold", size: 32)
+        summaryLabel.text = self.current?.weather.first?.main
         
         return headerView
         
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    
+    
+    
     // Table
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        }
         return models.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: HourlyTableViewCell.identifier, for: indexPath) as! HourlyTableViewCell
+            cell.configure(with: hourlyModels)
+            return cell
+        }
+        
         
         let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as! WeatherTableViewCell
         cell.configure(with: models[indexPath.row])
@@ -177,8 +201,30 @@ struct WeatherResponse: Codable {
 //
     let timezone: String
     let daily: [Daily]
-    let current: 
+    let current: Current
+    let hourly: [Hourly]
     
+    
+}
+
+struct Hourly: Codable {
+    var temp: Float
+    struct Weather: Codable {
+        let main: String
+    }
+    let weather: [Weather]
+}
+
+
+
+
+
+struct Current: Codable {
+    let temp: Float
+    struct Weather: Codable {
+        let main: String
+    }
+    let weather: [Weather]
     
 }
 
