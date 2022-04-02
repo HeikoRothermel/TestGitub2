@@ -17,9 +17,18 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var iconImageView: UIImageView!
     @IBOutlet var tempLabel: UILabel!
+    @IBOutlet var relevantHour: UILabel!
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
     
     func configure(with model: Hourly) {
         self.tempLabel.text = "\(Int(model.temp))°"
+        self.relevantHour.text = "\(getDayForDate(Date(timeIntervalSince1970: Double(model.dt)))) Uhr"
         self.iconImageView.contentMode = .scaleAspectFit
         self.iconImageView.image = UIImage(named:"sun")
         let icon = model.weather.first?.main.lowercased()  ?? ""
@@ -34,9 +43,16 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
+    func getDayForDate(_ date: Date?) -> String {
+            guard let inputDate = date else {
+                return ""
+            }
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "H"
+            return formatter.string(from: inputDate)
+            
+            
+        }
+    
 }

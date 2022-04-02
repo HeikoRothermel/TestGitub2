@@ -209,6 +209,7 @@ struct WeatherResponse: Codable {
 
 struct Hourly: Codable {
     var temp: Float
+    let dt: Int
     struct Weather: Codable {
         let main: String
     }
