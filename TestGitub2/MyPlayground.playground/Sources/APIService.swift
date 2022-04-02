@@ -1,13 +1,13 @@
 import Foundation
 
-class APIService {
-    public  let shared = APIService()
+public class APIService {
+    public static let shared = APIService()
     
     public enum APIError: Error {
         case error(_ errorString: String)
     }
     
-    public static func getJSON<T: Decodable>(urlString: String,dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, keyDecodingStrategy:JSONDecoder.KeyDecodingStrategy = .useDefaultKeys, completion: @escaping (Result<T,APIError>) -> Void) {
+    public func getJSON<T: Decodable>(urlString: String,dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, keyDecodingStrategy:JSONDecoder.KeyDecodingStrategy = .useDefaultKeys, completion: @escaping (Result<T,APIError>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(.error(NSLocalizedString("Error, Invalid URL", comment: ""))))
         return
