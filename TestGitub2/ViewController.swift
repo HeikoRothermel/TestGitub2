@@ -16,8 +16,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var models = [Daily]()
     
     let locationManager = CLLocationManager()
-    
     var currentLocation: CLLocation?
+    var current:
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,14 +104,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let entries = result.daily
         
         self.models.append(contentsOf: entries)
+        let current = result.daily
+        self.DailyWeather = current
+        
             
         for itm in json!.daily {
-            print("Value: \(json?.timezone ?? "No timezone") \n \(itm.clouds), \(itm.uvi), \(itm.pop), \(itm.wind_gust)")
+            print("Value: \(json?.timezone ?? "No timezone") \n \(itm.dt), \(itm.clouds), \(itm.uvi), \(itm.pop), \(itm.wind_gust),\(itm.temp.max),\(itm.weather.first?.main ?? "")")
         }
         
             // Update user interface
         DispatchQueue.main.async {
             self.table.reloadData()
+            
+            self.table.tableHeaderView = self.createTableHeader()
         }
             
             
@@ -120,6 +125,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         task.resume()
         
+        
+    }
+    
+    
+    func createTableHeader() -> UIView {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width))
+        
+        let locationLabel = UILabel(frame: CGRect(x: 10, y: 10, width: view.frame.size.width - 20, height: headerView.frame.size.height / 5))
+        let summaryLabel = UILabel(frame: CGRect(x: 10, y: 20 + locationLabel.frame.size.height, width: view.frame.size.width - 20, height: headerView.frame.size.height / 5))
+        let tempLabel = UILabel(frame: CGRect(x: 10, y: 20 + locationLabel.frame.size.height + summaryLabel.frame.size.height, width: view.frame.size.width - 20, height: headerView.frame.size.height / 2))
+        
+        headerView.addSubview(locationLabel)
+        headerView.addSubview(summaryLabel)
+        headerView.addSubview(tempLabel)
+        
+        tempLabel.textAlignment = .center
+        locationLabel.textAlignment = .center
+        summaryLabel.textAlignment = .center
+        
+        tempLabel.text = "12"
+        tempLabel.font = UIFont(name: "Helvetica-Bold", size: 32)
+        locationLabel.text = "Current Location"
+        summaryLabel.text = "Clear"
+        
+        return headerView
         
     }
     
@@ -135,6 +165,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
 
 }
 
@@ -143,7 +177,7 @@ struct WeatherResponse: Codable {
 //
     let timezone: String
     let daily: [Daily]
-    
+    let current: 
     
     
 }
@@ -154,14 +188,23 @@ struct Daily: Codable {
     let wind_gust: Float
     let pop: Float
     let uvi: Float
+    struct Temp: Codable {
+
+        let eve: Float
+        let morn: Float
+        let max: Float
+        let min: Float
+
+    }
+    let temp: Temp
     
-    
+    struct Weather: Codable {
+
+        let main: String
+
+    }
+    let weather: [Weather]
     
 }
 
-//struct Weather: Codable {
-//
-//    let main: String
-//    let description: String
-//
-//}
+
